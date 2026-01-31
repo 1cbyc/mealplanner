@@ -3,10 +3,10 @@ import { PrismaClient, MealClass, MarketCategory } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('🌾 Seeding NaijaNourish database...');
+    console.log('Seeding MealPlanner database...');
 
     // Create Ingredients
-    console.log('📦 Creating ingredients...');
+    console.log('Creating ingredients...');
 
     const rice = await prisma.ingredient.upsert({
         where: { name: 'Rice' },
@@ -122,10 +122,10 @@ async function main() {
         create: { name: 'Corn Flour (Pap)', marketCategory: MarketCategory.GRAINS },
     });
 
-    console.log('✅ Ingredients created');
+    console.log('Ingredients created');
 
     // Create 15 Essential Nigerian Dishes
-    console.log('🍽️  Creating dishes...');
+    console.log('Creating dishes...');
 
     // 1. Jollof Rice (RICE_ONEPOT - Standalone)
     await prisma.dish.upsert({
@@ -407,13 +407,13 @@ async function main() {
         },
     });
 
-    console.log('✅ 15 Essential dishes created');
-    console.log('🎉 Seeding complete!');
+    console.log('15 Essential dishes created');
+    console.log('Seeding complete!');
 }
 
 main()
     .catch((e) => {
-        console.error('❌ Error seeding database:', e);
+        console.error('Error seeding database:', e);
         process.exit(1);
     })
     .finally(async () => {

@@ -1,7 +1,7 @@
 {
-  "name": "naijanourish-backend",
+  "name": "mealplanner-backend",
   "version": "1.0.0",
-  "description": "NaijaNourish meal planning backend API",
+  "description": "MealPlanner backend API with Nigerian meal logic",
   "author": "",
   "private": true,
   "license": "MIT",

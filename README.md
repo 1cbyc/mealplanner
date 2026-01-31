@@ -1,158 +1,88 @@
-# NaijaNourish (WifeSaver) - MVP
+# MealPlanner (WifeSaver)
 
-## Overview
-**NaijaNourish** is a "Wife-First" meal planning system designed to eliminate decision fatigue by generating valid, authentic Nigerian meal plans with strict compatibility rules.
+A meal planning application for Nigerian cuisine with strict compatibility rules.
 
 ## Tech Stack
-- **Backend**: NestJS (TypeScript)
-- **Frontend**: Next.js 15 (App Router) + Tailwind CSS + Shadcn UI
-- **Database**: PostgreSQL (Neon)
-- **ORM**: Prisma
-- **Language**: TypeScript (Strict Mode)
+
+- Backend: NestJS (TypeScript)
+- Frontend: Next.js 15 (App Router) + Tailwind CSS + Shadcn UI
+- Database: PostgreSQL
+- ORM: Prisma
 
 ## Project Structure
+
 ```
 mealplanner/
 ├── backend/               # NestJS API
 │   ├── prisma/
-│   │   ├── schema.prisma  # Database schema with Nigerian meal logic
-│   │   └── seed.ts        # 15 essential Nigerian dishes
-│   ├── src/
-│   │   ├── meal-planner/  # Core meal planning module
-│   │   │   ├── meal-planner.controller.ts
-│   │   │   ├── meal-planner.service.ts  # Compatibility matrix logic
-│   │   │   └── meal-planner.module.ts
-│   │   ├── prisma.service.ts
-│   │   ├── app.module.ts
-│   │   └── main.ts
-│   └── package.json
-├── frontend/              # Next.js dashboard
-│   ├── app/
-│   │   ├── page.tsx       # Main dashboard
-│   │   └── layout.tsx
-│   ├── components/ui/     # Shadcn components
-│   └── lib/utils.ts
-└── README.md
+│   │   ├── schema.prisma
+│   │   └── seed.ts
+│   └── src/
+│       ├── meal-planner/
+│       ├── prisma.service.ts
+│       └── main.ts
+└── frontend/              # Next.js dashboard
+    ├── app/
+    └── components/
 ```
 
-## The "Naija Compatibility Matrix"
+## Nigerian Meal Compatibility Rules
 
-### Rules Implemented
-1. **SWALLOW** (Eba, Pounded Yam, Semo) → **REQUIRES** SOUP (Egusi, Ogbono, Efo)
-2. **RICE_PLAIN** (White Rice) → **REQUIRES** SAUCE (Tomato Stew)
-3. **RICE_ONEPOT** (Jollof, Fried Rice) → **STANDALONE** (Optional sides)
-4. **TUBER_BOILED** (Yam) → **REQUIRES** SAUCE
-5. **LEGUME** (Beans, Moi-Moi, Akara) → **STANDALONE**
+The system enforces authentic Nigerian meal pairings:
 
-### Database Schema
-- **Enums**: `MealClass`, `MarketCategory`, `MealTime`
-- **Models**: `Dish`, `Ingredient`, `DishIngredient`, `MenuDay`
-- **Composite Meals**: MenuDay supports primary + secondary dishes for lunch/dinner
+1. SWALLOW (Eba, Pounded Yam, Semo) must be paired with SOUP (Egusi, Ogbono, Efo)
+2. RICE_PLAIN (White Rice) must be paired with SAUCE (Tomato Stew)
+3. RICE_ONEPOT (Jollof, Fried Rice) is standalone
+4. TUBER_BOILED (Yam) must be paired with SAUCE
+5. LEGUME (Beans, Moi-Moi, Akara) is standalone
 
-## Setup Instructions
+## Database Setup
 
-### 1. Database Setup (Neon PostgreSQL)
-
-1. Go to [Neon.tech](https://neon.tech) and create a free account
-2. Create a new project called "naijanourish"
-3. Copy the connection string (should look like: `postgresql://user:pass@ep-xxx.region.aws.neon.tech/dbname`)
-4. Update `backend/.env`:
-   ```env
-   DATABASE_URL="your_neon_connection_string_here"
-   PORT=4000
-   ```
-
-### 2. Backend Setup
+### Using Docker (Local)
 
 ```bash
+docker compose up -d
+```
+
+### Using Railway (Production)
+
+1. Create a PostgreSQL database on Railway
+2. Copy the DATABASE_URL
+3. Update `backend/.env`
+
+## Running Locally
+
+```bash
+# Backend
 cd backend
-
-# Install dependencies (if not already done)
-npm install
-
-# Generate Prisma Client
 npx prisma generate
-
-# Push schema to database
 npx prisma db push
-
-# Seed the database with 15 Nigerian dishes
 npx prisma db seed
-
-# (Optional) Open Prisma Studio to view data
-npx prisma studio
-
-# Start the backend server
 npm run start:dev
-```
 
-The API will run on `http://localhost:4000`
-
-### 3. Frontend Setup
-
-```bash
+# Frontend (new terminal)
 cd frontend
-
-# Install dependencies (if not already done)
-npm install
-
-# Start the development server
 npm run dev
 ```
 
-The frontend will run on `http://localhost:3000`
+Backend: http://localhost:4000
+Frontend: http://localhost:3000
 
 ## API Endpoints
 
-- **POST** `/meal-planner/generate` - Generate a 7-day meal plan
-- **GET** `/meal-planner/current` - Get today's meal plan
-- **POST** `/meal-planner/swap/:mealTime` - Swap breakfast/lunch/dinner for today
+- `POST /meal-planner/generate` - Generate 7-day meal plan
+- `GET /meal-planner/current` - Get today's meal plan
+- `POST /meal-planner/swap/:mealTime` - Swap breakfast/lunch/dinner
 
-## Features
+## Deployment
 
-### Phase 1 (MVP - Implemented)
-- ✅ Rigid, rule-based meal generator
-- ✅ 15 curated Nigerian dishes
-- ✅ Strict compatibility enforcement (no "Eba + Stew" or "Jollof + Egusi")
-- ✅ Weekly plan generation
-- ✅ Meal swapping functionality
-- ✅ Beautiful, responsive dashboard
+Backend deploys to Railway, frontend deploys to Vercel.
 
-### Phase 2 (Planned)
-- ⏳ Auto-generate grocery lists based on meal plan
-- ⏳ Pantry inventory tracking
-- ⏳ Ingredient quantity calculations
-- ⏳ Shopping list optimization by market category
+Railway will auto-detect the backend and run migrations.
+Vercel will auto-detect Next.js.
 
-## Seeded Dishes
-
-1. **RICE_ONEPOT**: Jollof Rice, Fried Rice
-2. **RICE_PLAIN**: White Rice
-3. **SWALLOW**: Eba, Pounded Yam, Semo
-4. **SOUP**: Egusi Soup, Ogbono Soup, Efo Riro
-5. **SAUCE**: Tomato Stew
-6. **LEGUME**: Beans, Moi-Moi, Akara
-7. **LIGHT**: Pap
-8. **SIDE**: Fried Plantain
-
-## Development Notes
-
-### Key Files
-- `backend/src/meal-planner/meal-planner.service.ts` - Contains the compatibility matrix
-- `backend/prisma/schema.prisma` - Database schema
-- `frontend/app/page.tsx` - Main dashboard UI
-
-### Design Philosophy
-- **Zero Decision Fatigue**: The system never suggests invalid combinations
-- **Wife-First**: Simple, beautiful UI that requires minimal interaction
-- **Authentic**: Only genuine Nigerian meal pairings
-
-## Next Steps
-
-1. **Set up your Neon database** and update the `DATABASE_URL`
-2. **Run migrations and seeding** to populate the DB
-3. **Start both servers** (backend on :4000, frontend on :3000)
-4. **Generate your first meal plan** and enjoy! 🎉
+Set `NEXT_PUBLIC_API_URL` environment variable on Vercel to point to your Railway backend URL.
 
 ## License
+
 MIT

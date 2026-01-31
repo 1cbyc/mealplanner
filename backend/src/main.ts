@@ -12,6 +12,6 @@ async function bootstrap() {
 
   const port = process.env.PORT || 4000;
   await app.listen(port);
-  console.log(`🚀 NaijaNourish API running on http://localhost:${port}`);
+  console.log(`MealPlanner API running on http://localhost:${port}`);
 }
 bootstrap();

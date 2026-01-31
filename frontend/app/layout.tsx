@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NaijaNourish - Smart Nigerian Meal Planning",
+  title: "MealPlanner - Smart Nigerian Meal Planning",
   description: "Wife-first meal planning system for authentic Nigerian cuisine",
 };
 

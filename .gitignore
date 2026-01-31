@@ -40,3 +40,6 @@ Thumbs.db
 
 # NestJS specific
 .eslintrc.js
+
+# 1cbyc
+*.md

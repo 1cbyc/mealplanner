@@ -221,7 +221,7 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                  NaijaNourish
+                  MealPlanner
                 </h1>
                 <p className="text-sm text-gray-500">Smart Nigerian Meal Planning</p>
               </div>
@@ -277,7 +277,7 @@ export default function Home() {
               <ChefHat className="h-16 w-16 text-emerald-600" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">
-              Welcome to NaijaNourish!
+              Welcome to MealPlanner!
             </h2>
             <p className="text-gray-600 mb-8 max-w-md">
               Get started by generating your personalized Nigerian meal plan.
@@ -308,7 +308,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="mt-16 border-t border-gray-200 bg-white">
         <div className="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
-          <p>&copy; 2026 NaijaNourish. Made with ❤️ for authentic Nigerian cuisine.</p>
+          <p>&copy; 2026 MealPlanner. Made with ❤️ for authentic Nigerian cuisine.</p>
         </div>
       </footer>
     </div>
