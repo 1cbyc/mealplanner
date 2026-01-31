@@ -68,6 +68,37 @@ npm run dev
 Backend: http://localhost:4000
 Frontend: http://localhost:3000
 
+## Local Development
+
+### With Docker
+```bash
+# Start PostgreSQL
+docker compose up -d postgres
+
+# Then run backend manually (see below)
+```
+
+### Backend Setup
+```bash
+cd backend
+npm install
+
+# NestJS will auto-load .env file
+# DATABASE_URL is already configured for local PostgreSQL
+npm run start:dev
+```
+
+Backend: http://localhost:4000
+
+### Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend: http://localhost:3000
+
 ## API Endpoints
 
 - `POST /meal-planner/generate` - Generate 7-day meal plan
@@ -76,12 +107,21 @@ Frontend: http://localhost:3000
 
 ## Deployment
 
-Backend deploys to Railway, frontend deploys to Vercel.
+### Backend (Railway)
+1. Create PostgreSQL database on Railway
+2. Create new service from GitHub repo
+3. Point to `/backend` as root directory
+4. Railway will auto-detect Node.js and use:
+   - Build: `npm install && npx prisma generate && npm run build`
+   - Start: `npx prisma db push && npx prisma db seed && npm run start:prod`
+5. Environment variable `DATABASE_URL` will be auto-injected by Railway PostgreSQL service
 
-Railway will auto-detect the backend and run migrations.
-Vercel will auto-detect Next.js.
-
-Set `NEXT_PUBLIC_API_URL` environment variable on Vercel to point to your Railway backend URL.
+### Frontend (Vercel)
+1. Import GitHub repo to Vercel
+2. Set root directory to `frontend`
+3. Add environment variable:
+   - `NEXT_PUBLIC_API_URL` = your Railway backend URL (e.g., `https://mealplanner-production.up.railway.app`)
+4. Vercel will auto-detect Next.js and deploy
 
 ## License
 
