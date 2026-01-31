@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums: Define the meal classification system
+enum MealClass {
+  SWALLOW        // Eba, Pounded Yam, Semo, Fufu, Amala
+  SOUP           // Egusi, Ogbono, Efo, Okra, Bitterleaf
+  RICE_PLAIN     // White Rice, Ofada Rice (needs sauce)
+  RICE_ONEPOT    // Jollof Rice, Fried Rice, Coconut Rice (standalone)
+  TUBER_BOILED   // Boiled Yam, Boiled Plantain (needs sauce)
+  SAUCE          // Tomato Stew, Ayamase, Egg Sauce, Fish Sauce
+  LEGUME         // Beans, Moi-Moi, Akara (standalone)
+  LIGHT          // Pap, Custard, Oatmeal, Tea, Bread
+  SIDE           // Fried Plantain, Coleslaw, Salad
+}
+
+enum MarketCategory {
+  PROTEIN        // Chicken, Beef, Fish, Eggs
+  VEGETABLES     // Tomatoes, Pepper, Spinach, Onions
+  GRAINS         // Rice, Beans, Garri, Semovita
+  TUBERS         // Yam, Plantain
+  SPICES         // Curry, Thyme, Salt, Maggi
+  OILS           // Palm Oil, Vegetable Oil, Groundnut Oil
+  DAIRY          // Milk, Butter
+}
+
+enum MealTime {
+  BREAKFAST
+  LUNCH
+  DINNER
+}
+
+// Models
+
+model Dish {
+  id                   String   @id @default(uuid())
+  name                 String   @unique
+  mealClass            MealClass
+  defaultCalories      Int?
+  preparationTimeMin   Int
+  isActive             Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // Relationships
+  ingredients          DishIngredient[]
+  menuDayBreakfast     MenuDay[] @relation("BreakfastDish")
+  menuDayLunch         MenuDay[] @relation("LunchDish")
+  menuDayLunchSecondary MenuDay[] @relation("LunchSecondaryDish")
+  menuDayDinner        MenuDay[] @relation("DinnerDish")
+  menuDayDinnerSecondary MenuDay[] @relation("DinnerSecondaryDish")
+
+  @@map("dishes")
+}
+
+model Ingredient {
+  id              String   @id @default(uuid())
+  name            String   @unique
+  marketCategory  MarketCategory
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relationships
+  dishes          DishIngredient[]
+
+  @@map("ingredients")
+}
+
+model DishIngredient {
+  id          String   @id @default(uuid())
+  dishId      String
+  ingredientId String
+  quantity    String?  // e.g., "2 cups", "500g", "3 pieces"
+  isOptional  Boolean  @default(false)
+
+  // Relationships
+  dish        Dish       @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  ingredient  Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@unique([dishId, ingredientId])
+  @@map("dish_ingredients")
+}
+
+model MenuDay {
+  id                    String   @id @default(uuid())
+  date                  DateTime @unique
+  
+  // Breakfast (simple, typically one dish)
+  breakfastDishId       String?
+  
+  // Lunch (can be composite: Main + Accompaniment)
+  lunchDishId           String?
+  lunchSecondaryDishId  String?  // For pairings like Eba + Egusi
+  
+  // Dinner (can be composite)
+  dinnerDishId          String?
+  dinnerSecondaryDishId String?
+  
+  notes                 String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relationships
+  breakfastDish         Dish? @relation("BreakfastDish", fields: [breakfastDishId], references: [id], onDelete: SetNull)
+  lunchDish             Dish? @relation("LunchDish", fields: [lunchDishId], references: [id], onDelete: SetNull)
+  lunchSecondaryDish    Dish? @relation("LunchSecondaryDish", fields: [lunchSecondaryDishId], references: [id], onDelete: SetNull)
+  dinnerDish            Dish? @relation("DinnerDish", fields: [dinnerDishId], references: [id], onDelete: SetNull)
+  dinnerSecondaryDish   Dish? @relation("DinnerSecondaryDish", fields: [dinnerSecondaryDishId], references: [id], onDelete: SetNull)
+
+  @@map("menu_days")
+}
