@@ -30,6 +30,7 @@ services:
     environment:
       DATABASE_URL: postgresql://mealplanner:mealplanner123@postgres:5432/mealplanner?schema=public
       PORT: 4000
+      FRONTEND_URL: http://localhost:3000
     ports:
       - "4000:4000"
     depends_on:
