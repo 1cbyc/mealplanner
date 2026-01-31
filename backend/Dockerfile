@@ -28,4 +28,4 @@ RUN npm run build
 EXPOSE 4000
 
 # Run migrations, seed, and start
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npx prisma db seed && node dist/main"]
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npx prisma db seed && node dist/main.js"]
