@@ -1,22 +1,24 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "MealPlanner - Smart Nigerian Meal Planning",
-  description: "Wife-first meal planning system for authentic Nigerian cuisine",
+	title: "MealPlanner",
+	description: "Smart Nigerian Meal Planning - Authentic & Delicious",
+	viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0", // Mobile optimization
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
-  );
+	return (
+		<html lang="en">
+			<body className={`${inter.variable} ${outfit.variable} font-sans bg-stone-50 text-stone-900`}>{children}</body>
+		</html>
+	);
 }
