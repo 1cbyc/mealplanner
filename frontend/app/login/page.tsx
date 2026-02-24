@@ -39,7 +39,7 @@ function LoginContent() {
 				if (success) {
 					router.push("/");
 				} else {
-					setError("Invalid credentials. Try 'demo' / 'demo123'");
+					setError("Invalid credentials.");
 				}
 			} else {
 				// Signup
@@ -151,14 +151,6 @@ function LoginContent() {
 							)}
 						</Button>
 					</form>
-
-					{activeTab === 'signin' && (
-						<div className="mt-8 text-center">
-							<p className="text-xs text-stone-400">
-								Try <strong className="text-stone-600">demo</strong> / <strong className="text-stone-600">demo123</strong>
-							</p>
-						</div>
-					)}
 				</div>
 			</div>
 		</div>
