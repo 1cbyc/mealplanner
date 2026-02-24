@@ -151,8 +151,6 @@ function LoginContent() {
 							)}
 						</Button>
 					</form>
-
-
 				</div>
 			</div>
 		</div>
