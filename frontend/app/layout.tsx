@@ -8,13 +8,7 @@ const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 export const metadata: Metadata = {
 	title: "MealPlanner",
 	description: "Smart Nigerian Meal Planning - Authentic & Delicious",
-};
-
-export const viewport = {
-	width: "device-width",
-	initialScale: 1,
-	maximumScale: 1,
-	userScalable: false,
+	viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0", // Mobile optimization
 };
 
 export default function RootLayout({
