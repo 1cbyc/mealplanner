@@ -80,6 +80,15 @@ function ProtectedHome() {
 		setGenerating(false);
 	};
 
+	const handleSwap = async (mealTime: 'breakfast' | 'lunch' | 'dinner') => {
+		if (!todaysPlan) return;
+		setSwapping(mealTime);
+		// Simulate API delay for swapping
+		await new Promise(resolve => setTimeout(resolve, 800));
+		swapMeal(todaysPlan.date, mealTime);
+		setSwapping(null);
+	};
+
 	// Get the selected day's plan (defaults to today = index 0)
 	const todaysPlan = currentPlan.length > 0 ? currentPlan[selectedDayIndex] ?? currentPlan[0] : null;
 
@@ -181,7 +190,7 @@ function ProtectedHome() {
 											prepTime: todaysPlan.breakfast.prepTime,
 											imageGradient: MEAL_GRADIENTS.breakfast
 										} : null}
-										onSwap={() => swapMeal(todaysPlan.date, 'breakfast')}
+										onSwap={() => handleSwap('breakfast')}
 										isLoading={swapping === 'breakfast'}
 									/>
 
@@ -196,7 +205,7 @@ function ProtectedHome() {
 											prepTime: todaysPlan.lunch.prepTime,
 											imageGradient: MEAL_GRADIENTS.lunch
 										} : null}
-										onSwap={() => swapMeal(todaysPlan.date, 'lunch')}
+										onSwap={() => handleSwap('lunch')}
 										isLoading={swapping === 'lunch'}
 									/>
 
@@ -211,7 +220,7 @@ function ProtectedHome() {
 											prepTime: todaysPlan.dinner.prepTime,
 											imageGradient: MEAL_GRADIENTS.dinner
 										} : null}
-										onSwap={() => swapMeal(todaysPlan.date, 'dinner')}
+										onSwap={() => handleSwap('dinner')}
 										isLoading={swapping === 'dinner'}
 									/>
 								</div>
