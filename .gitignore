@@ -13,3 +13,5 @@ deployment_*.tar.gz
 
 # Version directories
 v1/
+docker-compose-local.yml
+.DS_Store
