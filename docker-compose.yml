@@ -31,6 +31,7 @@ services:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public
       PORT: 4000
       FRONTEND_URL: http://localhost:3000
+      NODE_ENV: ${NODE_ENV:-production}
     ports:
       - "127.0.0.1:4000:4000"
     depends_on:
