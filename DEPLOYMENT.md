@@ -1,106 +1,51 @@
-# MealPlanner Deployment Guide
+# MealPlanner Deployment
 
-## Development vs Production
+## Quick Start
 
-### Development (Local/MacBook)
 ```bash
-# Use the default Dockerfile (with db push --accept-data-loss)
-docker-compose up
+# 1. Clone and setup
+git clone https://github.com/1cbyc/mealplanner.git
+cd mealplanner
+git checkout claw-branch
 
-# Or with local override if port 5432 is taken
-docker-compose -f docker-compose.yml -f docker-compose-local.yml up
+# 2. Configure environment
+cp .env.example .env
+# Edit .env with your database credentials
+
+# 3. Run
+docker-compose up -d
 ```
 
-### Production (VPS/Server)
+## Environment (.env file)
 ```bash
-# 1. Build with production Dockerfile
-docker build -f backend/Dockerfile.production -t mealplanner-backend:prod ./backend
-
-# 2. Run with production compose
-docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
-
-# 3. Or build and run together
-docker-compose -f docker-compose.yml build
-docker-compose -f docker-compose.yml up -d
-```
-
-## Key Differences
-
-### Development Dockerfile (`backend/Dockerfile`)
-- Uses `db push --accept-data-loss` (resets data on restart)
-- Includes `db seed` (adds sample data)
-- Good for local development/testing
-
-### Production Dockerfile (`backend/Dockerfile.production`)
-- Uses `migrate deploy` (preserves data)
-- Multi-stage build (smaller image)
-- Non-root user for security
-- Health checks
-- No data loss on restart
-
-## Environment Variables
-
-Create `.env` file with:
-```bash
-# Database Configuration
-DB_USER=your_random_db_user_here
-DB_PASSWORD=your_secure_password_here
-DB_NAME=your_random_db_name_here
-
-# Application
+DB_USER=your_db_user
+DB_PASSWORD=your_password
+DB_NAME=your_database
+DATABASE_URL=postgresql://user:pass@localhost:5432/db?schema=public
 BACKEND_PORT=4000
 FRONTEND_PORT=3000
-NODE_ENV=production  # or development
 ```
 
-## Security Notes
+## For Development (if you need sample data)
 
-1. **Never commit `.env` to Git**
-2. **Use random database/user names** (not descriptive)
-3. **Change default ports** if needed
-4. **Use SSL/TLS** in production
-5. **Regular backups** of PostgreSQL data
+Temporarily change the Dockerfile CMD to:
+```dockerfile
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npx prisma db seed && node dist/src/main.js"]
+```
 
-## Backup & Restore
-
+Then rebuild:
 ```bash
-# Backup database
+docker-compose down
+docker-compose build
+docker-compose up -d
+```
+
+## Backup Database
+```bash
 docker exec mealplanner-db pg_dump -U ${DB_USER} ${DB_NAME} > backup.sql
-
-# Restore database
-cat backup.sql | docker exec -i mealplanner-db psql -U ${DB_USER} ${DB_NAME}
 ```
 
-## Monitoring
-
-```bash
-# Check logs
-docker-compose logs -f
-
-# Check health
-docker-compose ps
-
-# View resource usage
-docker stats
-```
-
-## Troubleshooting
-
-### Port 5432 already in use (MacBook)
-```bash
-# Use local override
-docker-compose -f docker-compose.yml -f docker-compose-local.yml up
-```
-
-### Database connection errors
-1. Check `.env` file has correct credentials
-2. Verify PostgreSQL is running: `docker-compose ps`
-3. Check logs: `docker-compose logs postgres`
-
-### Build errors
-```bash
-# Clean rebuild
-docker-compose down -v
-docker-compose build --no-cache
-docker-compose up
-```
+## Notes
+- Uses `prisma migrate deploy` (preserves data)
+- Random database/user names recommended for security
+- `.env` file contains secrets - never commit to Git
