@@ -1,0 +1,7 @@
+# Local development override — use when port 5432 is already taken by Homebrew Postgres.
+# Run with: docker compose -f docker-compose.yml -f docker-compose-local.yml up
+
+services:
+  postgres:
+    ports: !reset
+      - "127.0.0.1:5433:5432"

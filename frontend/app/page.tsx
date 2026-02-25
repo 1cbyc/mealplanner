@@ -62,6 +62,7 @@ function ProtectedHome() {
 	const [currentView, setCurrentView] = useState('home');
 	const [generating, setGenerating] = useState(false);
 	const [swapping, setSwapping] = useState<string | null>(null);
+	const [selectedDayIndex, setSelectedDayIndex] = useState(0);
 
 	useEffect(() => {
 		if (!isLoading && !user) {
@@ -72,14 +73,15 @@ function ProtectedHome() {
 	// Handle Generation Animation
 	const handleGenerate = async () => {
 		setGenerating(true);
+		setSelectedDayIndex(0);
 		// Simulate API/Thought delay
 		await new Promise(resolve => setTimeout(resolve, 2000));
 		generatePlan();
 		setGenerating(false);
 	};
 
-	// Get Today's Plan (assume index 0 for now, or find by date)
-	const todaysPlan = currentPlan.length > 0 ? currentPlan[0] : null;
+	// Get the selected day's plan (defaults to today = index 0)
+	const todaysPlan = currentPlan.length > 0 ? currentPlan[selectedDayIndex] ?? currentPlan[0] : null;
 
 	if (isLoading || !user) {
 		return null; // Or a loading spinner
@@ -119,18 +121,19 @@ function ProtectedHome() {
 					</div>
 
 					{/* Date Selector (Simulated Week View) */}
-					{todaysPlan && (
+					{currentPlan.length > 0 && (
 						<div className="mt-6 flex gap-3 overflow-x-auto no-scrollbar pb-2">
 							{currentPlan.slice(0, 5).map((day, i) => {
 								const d = new Date(day.date);
-								const isToday = i === 0;
+								const isSelected = i === selectedDayIndex;
 								return (
 									<div
 										key={i}
-										className={`flex flex-col items-center justify-center min-w-[60px] h-[72px] rounded-2xl border transition-all cursor-pointer ${isToday
+										className={`flex flex-col items-center justify-center min-w-[60px] h-[72px] rounded-2xl border transition-all cursor-pointer ${isSelected
 											? "bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-200"
-											: "bg-white border-stone-200 text-stone-400 hover:border-emerald-200"
+											: "bg-white border-stone-200 text-stone-400 hover:border-emerald-200 hover:text-emerald-600"
 											}`}
+										onClick={() => setSelectedDayIndex(i)}
 									>
 										<span className="text-[10px] font-bold uppercase">{d.toLocaleDateString('en-US', { weekday: 'short' })}</span>
 										<span className="text-xl font-bold font-display">{d.getDate()}</span>
@@ -149,7 +152,12 @@ function ProtectedHome() {
 							<>
 								{/* Context Header */}
 								<div className="flex items-center justify-between">
-									<h2 className="text-xl font-display font-bold text-stone-800">Today's Plan</h2>
+									<h2 className="text-xl font-display font-bold text-stone-800">
+										{selectedDayIndex === 0
+											? "Today's Plan"
+											: `${new Date(currentPlan[selectedDayIndex]?.date ?? '').toLocaleDateString('en-US', { weekday: 'long' })}'s Plan`
+										}
+									</h2>
 									<Button
 										variant="ghost"
 										size="sm"
