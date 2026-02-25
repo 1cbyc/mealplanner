@@ -6,15 +6,15 @@ services:
     container_name: mealplanner-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: mealplanner
-      POSTGRES_PASSWORD: mealplanner123
-      POSTGRES_DB: mealplanner
+      POSTGRES_USER: ${DB_USER:-mealplanner}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-mealplanner}
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U mealplanner" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-mealplanner}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,11 +28,11 @@ services:
     container_name: mealplanner-api
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://mealplanner:mealplanner123@postgres:5432/mealplanner?schema=public
+      DATABASE_URL: postgresql://${DB_USER:-mealplanner}:${DB_PASSWORD}@postgres:5432/${DB_NAME:-mealplanner}?schema=public
       PORT: 4000
       FRONTEND_URL: http://localhost:3000
     ports:
-      - "4000:4000"
+      - "127.0.0.1:4000:4000"
     depends_on:
       postgres:
         condition: service_healthy
