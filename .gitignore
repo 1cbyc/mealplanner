@@ -6,7 +6,6 @@ dist/
 npm-debug.log
 *.md
 !README.md
-!DEPLOYMENT.md
 
 # Deployment archives
 deployment_*.tar.gz
