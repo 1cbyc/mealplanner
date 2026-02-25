@@ -6,15 +6,15 @@ services:
     container_name: mealplanner-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER:-mealplanner}
+      POSTGRES_USER: ${DB_USER:-mp_chef_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME:-mealplanner}
+      POSTGRES_DB: ${DB_NAME:-mp_nigerian_meals}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-mealplanner}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-mp_chef_user}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +28,7 @@ services:
     container_name: mealplanner-api
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://${DB_USER:-mealplanner}:${DB_PASSWORD}@postgres:5432/${DB_NAME:-mealplanner}?schema=public
+      DATABASE_URL: postgresql://${DB_USER:-mp_chef_user}:${DB_PASSWORD}@postgres:5432/${DB_NAME:-mp_nigerian_meals}?schema=public
       PORT: 4000
       FRONTEND_URL: http://localhost:3000
     ports:
